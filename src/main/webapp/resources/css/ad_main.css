@@ -1,0 +1,138 @@
+@charset "utf-8";
+
+.chart-container {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-rows: repeat(2, minmax(100px, auto)) !important;
+    gap: 10px !important;
+    display: grid !important;
+    width: 800px;
+}
+
+.figure {
+	width: 190px; 
+	height: 50px; 
+	background: #eee; 
+	text-align: center; 
+	line-height: 50px;
+}
+
+
+/* 그래프 */
+.graph {
+    width: 350px; 
+    height: 200px; 
+    background-color: #eee;
+    text-align: center;
+    transition: border 0.3s ease; /* Smooth transition for drop indication */
+    position: relative;
+    margin: 10px;
+    z-index: 1; /* Default z-index */
+}
+.graph.over {
+    border: 2px dashed #000; /* Optional: visual feedback */
+    z-index: 10; /* Increase z-index to ensure drop target is on top */
+}
+
+.graph.active{
+	background-color: #bbb;
+	border: 2px dashed #ccc;
+}
+
+
+/* 삭제버튼 */
+.close-btn {
+	display: none;
+}
+
+.close-btn.active{
+	display: block;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	background: white;
+	border: none;
+	color: #d32f2f;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	display: flex;           /* Flexbox for centering the × */
+	align-items: center;     /* Center vertically */
+	justify-content: center; /* Center horizontally */
+	font-size: 20px;         /* Font size of × */
+	cursor: pointer;
+}
+
+.close-btn:hover {
+    background: #d32f2f;
+    color: white;
+}
+
+
+/* 사이즈조절 버튼  */
+.sizeBtn {
+	display: none;
+}
+
+.sizeBtn{
+	position: absolute;
+	cursor: move;
+	right: 0;
+	bottom: 0;
+	padding : 5px;
+	background: transparent;
+	border: none;
+}
+
+
+.sizeBtn.active {
+    display: block; 
+}
+
+.fa-up-down-left-right.active:hover {
+	color: yellow;
+}
+
+
+/* 사이드바 */
+.sidebar {
+    width: 20%;
+    position: fixed;
+    top: 45px;
+    right: -20%;  /* Hide the sidebar initially */
+    height: 100%;
+    background-color: #eee;
+    transition: right 0.3s ease;  /* Smooth sliding effect */
+}
+
+/* When the sidebar is visible */
+.sidebar.active {
+    right: 0;  /* Bring the sidebar into view */
+}
+
+.item-list {
+    padding: 20px;
+    color: #000040;;
+}
+
+.item {
+	display: flex;
+    justify-content: space-between; /* 양 끝으로 배치 */
+    align-items: center; /* 세로 중앙 정렬 */
+    padding: 10px;
+    background-color: #ddd;
+    margin-bottom: 5px;
+    cursor: pointer;
+    color: white;
+    background: skyblue;
+}
+
+.sortable-placeholder {
+    background: skyblue;
+}
+
+/* 리셋버튼 */
+#resetBtn {
+	color: white;
+    background-color: #0056b3;
+}

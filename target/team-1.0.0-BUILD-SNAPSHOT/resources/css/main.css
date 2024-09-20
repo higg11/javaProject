@@ -1,0 +1,500 @@
+@charset "utf-8";
+
+/* header */
+
+nav.navbar-expand-sm.sticky-top{background-color : white;}
+
+.nav-link{color : black;}
+
+.nav-link:hover, .login:hover, .register:hover{color : orange;}
+
+.mainTitle:hover {color: #9d4f00;}
+
+.welcome {color : #30622f;}
+
+.fa-user-circle{color : #30622f;}
+
+.fa-recycle {color: #00a600;}
+
+.fa-tree {color: #00a600;}
+
+.fa-store {color: #00a600;}
+
+
+
+/* header : 장바구니 */
+
+.shoppingcart_count{
+	position: absolute; z-index:1; left: 800px; bottom: 20px; 
+	border-radius:100%; background:crimson; height:20px; width:20px; 
+	text-align: center; color:white;	
+}
+
+.shoppingcart{
+	position: absolute; left: 770px; background:#30622f; border-radius:100%; width:45px
+}
+
+.fa-shopping-cart {
+	color:white;
+}
+
+.fa-shopping-cart:hover{
+	color : black;
+}
+
+.shoppingcart_count{
+	font-size: smaller;
+}
+
+
+/* 회원정보  */
+.btn.btn-primary.dropdown-toggle{
+	background : white;
+	color : black;
+	border-style : none;
+	margin-top: 3px;
+}
+
+
+/* header : 마이프로필 */
+
+.myinfo{
+	position: absolute; left: 820px; background:#30622f; border-radius:100%; width:45px;
+}
+
+.fa-user-edit{
+	color:white;
+}
+
+.fa-user-edit:hover{
+	color : black;
+}
+
+/* 제품 : 검색창 */
+.search {
+	border-right-style: none; border-color: #30622f; width: 500px;
+	border-radius: 20px 0px 0px 20px;
+}
+
+.search_btn{
+	border-left-style: none; border-color: #30622f; background:#30622f; color: white;
+	border-radius: 0px 30px 30px 0px;	
+}
+
+.search_btn:hover {
+	border-left-style: none; border-color: #30622f; color: white;
+}
+
+/* ############################### */
+/* footer : 하단메뉴  */
+
+.footer_navbar {
+	display : flex;
+	justify-content : space-between;
+	align-items : center;		
+	padding-top : 10px;
+}
+
+ul.footer_navbar-menu{
+	display : flex;
+	life-style : none;
+	margin : 0;	
+}
+
+.footer_navbar-menu li {
+	padding : 5px;
+	
+}
+
+.footer_navbar-menu a {
+	color : black;
+}
+
+.footer_navbar-info a {
+	color : #aaa;
+}
+
+.navbar-info {
+	display : flex;
+	margin : 0;		
+}
+
+.navbar-info li {
+	padding : 5px
+}
+
+.question_btn {
+	background : #00a600;
+	border-style : none;
+	color : white;
+}
+
+/* ############################### */
+/* 로그인 : fa 아이콘 스타일 */
+.findIdPw .fa{
+	color:#aaf;
+}
+
+.findIdPw a{
+	font-size:13px;
+	color:#555;
+	text-decoration: none;
+}
+
+/* vertical-align:3px; 수직정렬 기준선을 3px 위로 조정 */
+.findIdPw a+a:before{
+	content:'';
+	display:inline-block;
+	background-color:#888;
+	width:3px;
+	height:3px;
+	vertical-align:3px;	
+	margin: 0 5px;
+}
+
+.findIdPw a:hover{
+	color:black;
+}
+
+/* myProfile */
+.myProfile {
+	color:white;
+	text-decoration:none;
+	line-height: 42px;
+}
+
+.myProfile:hover{
+	color:yellow;	
+}
+
+mypageTitle {
+   color: #006c00;
+   margin-left: 73px;
+}
+
+.mypageTitle:hover {
+   color: #008c00;
+}
+
+
+/* ############################### */
+/* 인증코드 타이머 */
+
+#confirmEmail {
+	/* display:none; */  
+	/* opacity: 0; */  
+	visibility: hidden; /* 안 보일뿐 자리 차지  */	
+	height:0;
+}
+
+.code-msg {
+	display: none;
+	font-size: 11px;
+	color: green;
+}
+
+
+.input-code{
+	outline:none;
+	border-radius: 6px 0 0 6px;
+    border: 1px solid #ced4da;
+    width: 70%;
+    padding: 6px 12px;
+    border-right: 0;
+}
+
+.time{
+	outline:none;
+	border-radius: 0 6px 6px 0;
+    border: 1px solid #ced4da;
+    width: 30%;
+    padding: 6px 12px; 
+    border-left: 0;  
+    color:red;
+     
+}
+
+/* ############################### */
+/* 댓글 리스트 */
+.mb-2 div{
+	cursor:pointer;
+}
+
+.mb-2 div:hover{
+	background-color:#eee;
+}
+
+
+/* ############################### */
+/* card.jsp  */
+.home_card{
+	display : flex;	
+}
+
+.card{
+	height:300px;
+	width:200px;
+	position : relative;
+	overflow:hidden;
+	margin-right : 25px;
+	margin-left : 25px;
+	margin-bottom : 20px;
+			
+}
+
+.card-img-top{
+    width: 100%;
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+}
+.card-body {
+    width:inherit;
+    height: inherit;  
+    background-color: rgba(0, 0, 0, .5);
+    padding: 20px;
+    padding-top: 100px;
+    color:white;
+    position: absolute;    
+    top: 0;
+    left: 0;
+    transition: .7s;
+    box-sizing: border-box;
+    text-align: center;
+    opacity: 0;
+    font-size : smaller;    
+}
+
+/* .card .card-body a{
+    text-decoration: none;
+   
+} */
+
+.card .card-body .btn{
+    color: white;
+    background-color: dodgerblue;
+    border-radius: 3px;
+    padding: 8px;
+}
+
+.card:hover .card-body{
+    opacity: 1;
+    color : white;
+}
+
+
+/* ############################### */
+/* nav-tabs : home 상단에 있는 tab menu  */
+/* ul{list-style:none;}
+a{text-decoration:none; color:#333;}
+.wrap{padding:15px; letter-spacing:-0.5px; display:flex; padding : 0 100px; margin-bottom: 30px;}
+.tab_menu{position:relative;}
+.tab_menu .list{overflow:hidden;}
+.tab_menu .list li{float:left; margin-right:14px;}
+.tab_menu .list li.is_on .btn{font-weight:bold; color:green;}
+.tab_menu .list .btn{font-size:13px;}
+.tab_menu .cont_area{margin-top:10px;}
+.tab_menu .cont_area .cont{display:none; background:#555; color:#fff; text-align:center; width:75%; height:50%; line-height:100px;}
+.home_body{padding : 0 100px;}
+
+#nature_day img {width:75%; height:50%} */
+
+
+/* ############################### */
+/* aside.myprofile{
+	width: 300px;
+	height : 500px;
+	text-align : center;
+	margin : 20px;
+	padding : 10px;
+	border-right-style : solid;
+	border-color : #eee;
+	margin-bottom : 10px;
+} */
+
+/* .question_checkList {
+	width : 800px;
+	margin : 40px;
+} */
+
+.changePw{
+	width : 400px;
+	margin : 40px;
+}
+
+/********* recycle.jsp *********/
+* {
+   -webkit-box-sizing: border-box;
+   box-sizing: border-box;
+}
+
+.sectionTitle {
+   text-align: center;
+}
+
+.centered_content {
+   margin-bottom: 6.5rem;
+   margin-top: 50px;
+}
+
+.fa-feather {
+   position: relative;
+    right: 81px;
+    top: 30px;
+    color: #3e7b2e;
+}
+
+.centered_title {
+   color: #3e7b2e;
+   line-height: normal;
+   font-size: 25px;
+   margin-bottom: 1.8rem;
+   margin-top: 0;
+   font-weight: 700;
+   text-align: center;
+}
+
+.centered_subline {
+   text-align: center;
+   font-size: 17px;
+   color: #269360;
+   font-weight: 600;
+}
+
+.recycle_container {
+   display: flex;
+   justify-content: center;
+}
+
+.recycle_reservation, .recycle_donation {
+    flex: 0 0 auto; 
+    width: 380px;
+}
+
+.recycle_row {
+   margin-top: -2rem;
+   margin-bottom: -2rem;
+}
+
+.slick-slider .slick-list {
+   transform: translateZ(0);
+}
+
+.slick-slider>* {
+   padding: 0;
+}
+
+.slick-track {
+   display: flex;
+   left: 0;
+   margin-left: auto;
+   margin-right: auto;
+   position: relative;
+   top: 0;
+}
+
+.slick-initialized .slick-slide {
+   display: flex;
+   -webkit-box-align: center;
+   align-items: center;
+   -webkit-box-pack: center;
+   justify-content: center;
+   height: auto;
+   padding: 0 1.6rem;
+}
+
+.slick-slide {
+   float: left;
+   min-height: 1px;
+}
+
+.recycle_item {
+   height: 100%;
+   padding-top: 2rem;
+   padding-bottom: 2rem;
+}
+
+.recycle_block {
+   overflow: hidden;
+   background-color: #ffffff;
+   border-radius: 2rem;
+   transition: 0.15s ease-in-out;
+   box-shadow: 0 0.5rem 1.5rem 0 rgba(0, 0, 0, 0.1);
+   display: flex;
+   -webkit-box-orient: vertical;
+   -webkit-box-direction: normal;
+   flex-direction: column;
+   -webkit-box-pack: justify;
+   justify-content: space-between;
+   height: 100%;
+}
+
+.recycle_blockLink {
+   display: flex;
+   -webkit-box-orient: vertical;
+   -webkit-box-direction: normal;
+   flex-direction: column;
+   height: 100%;
+   font-weight: 400;
+}
+
+.recycle_img {
+   height: 20rem;
+   width: 100%;
+   background-position: center;
+   background-size: cover;
+}
+
+.recycle_content {
+   -webkit-box-flex: 1;
+   flex-grow: 1;
+   padding: 2rem 2.2rem;
+}
+
+.recycle_block .recycle_title {
+   color: #055f30;
+   display: -webkit-box !important;
+   -webkit-line-clamp: 3;
+   -webkit-box-orient: vertical;
+   overflow: hidden;
+   font-weight: 700;
+}
+
+.recycle_title {
+   font-size: 15px;
+}
+
+.recycle_text {
+   display: -webkit-box !important;
+   -webkit-line-clamp: 4;
+   -webkit-box-orient: vertical;
+   overflow: hidden;
+   font-size: 12px;
+   color: #13220f;
+}
+
+.recycle_text p:last-of-type {
+   margin-bottom: 0;
+   margin-top: 0;
+}
+
+a {
+   color: #1b8158;
+   text-decoration: none;
+   transition: 0.15s ease-in-out;
+}
+
+.reservation_link {
+   padding: 1rem;
+   font-size: 16px;
+   position: relative;
+   display: block;
+   color: #ffffff;
+   font-weight: 700;
+   line-height: normal;
+   text-align: center;
+   background-color: #1b8158;
+   transition: 0.15s ease-in-out;
+}
+/**********************************/

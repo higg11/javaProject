@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mapper.DonateMapper">
+	<!-- tbl_member 포인트 정보 -->
+	<select id="donateInfo" resultType="MemberDTO">
+		SELECT * from tbl_member
+		WHERE id = #{id}
+	</select>
+	
+	<!-- tbl_member 포인트 정보 업데이트(적립) -->
+    <update id="updatePoints">
+        UPDATE tbl_member SET point = #{point} WHERE id = #{id}
+    </update>
+    
+    <!-- tbl_point 포인트 내역 추가 -->
+    <insert id="donationAmount">
+    	INSERT INTO tbl_point (id, point, pointType)
+    	VALUES (#{id}, #{point}, #{pointType})
+    </insert>
+    
+    <!-- tbl_point 전체 포인트 리스트(관리자용) -->
+    <select id="donationList" resultType="pointDTO">
+    	SELECT * FROM tbl_point
+    </select>
+    
+    <!-- tbl_point 내 포인트 리스트(회원용) -->
+    <select id="myDonationList" resultType="pointDTO">
+    	SELECT * FROM tbl_point
+    	WHERE id = #{id}
+    	ORDER BY date DESC;
+    </select>
+    
+    <!-- 내 보유 포인트(ajax)  -->
+    <select id="getMyPoint" resultType="Integer">
+	    SELECT COALESCE(sum(point), 0) AS myPoint
+	    FROM tbl_point
+	    WHERE id = #{id}
+	</select>
+  
+    
+</mapper>

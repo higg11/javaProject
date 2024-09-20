@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mapper.MemberMapper">
+	<select id="memberList" resultType="MemberDTO">
+		select * from tbl_member
+	</select>
+
+	<insert id="memberInsert" parameterType="MemberDTO">
+		INSERT INTO tbl_member(id, pw, name, email, tel, zipcode, road_addr, detail_addr, rdate, point) 
+		VALUES(#{id},#{pw},#{name},#{email},#{tel},#{zipcode},#{road_addr},#{detail_addr}, #{rdate}, #{point})
+	</insert>
+	
+		<!-- 멤버 등록 아이디 중복체크 -->
+  	<!-- parameterType="Integer" 매개변수 타입 // resultType="MemberDTO" 바인딩(리턴) 타입 -->
+	<select id="memberIdCheck" parameterType="String" resultType="MemberDTO">
+	  	SELECT * FROM tbl_member WHERE id = #{id}
+	</select>
+		  	<!-- 멤버 등록 전화번호 중복체크 -->
+  	<!-- parameterType="Integer" 매개변수 타입 // resultType="MemberDTO" 바인딩(리턴) 타입 -->
+	<select id="memberTelCheck" parameterType="String" resultType="MemberDTO">
+	  	SELECT * FROM tbl_member WHERE tel = #{tel}
+	</select>
+
+	<delete id="deleteMember" parameterType="String">
+		DELETE FROM tbl_member
+		WHERE id = #{id}
+	</delete>
+
+	<select id="memberInfo" parameterType="String" resultType="MemberDTO">
+		SELECT * FROM tbl_member WHERE id = #{id}
+	</select>
+	
+	<select id="myProfile" parameterType="String" resultType="MemberDTO">
+		SELECT * FROM tbl_member WHERE id = #{id}
+	</select>
+	
+	<update id="memberUpdate" parameterType="MemberDTO">
+		UPDATE tbl_member SET
+		age=#{age}, email=#{email}, tel=#{tel}
+		WHERE id = #{id}
+	</update>
+
+	<select id="idCheck" resultType="MemberDTO">
+		SELECT * FROM tbl_member WHERE
+		id = #{uid}
+	</select>
+
+	<!-- 멤버 로그인 -->
+	<select id="memberLogin" resultType="MemberDTO">
+		<!-- SELECT id, pw, name FROM -->
+		SELECT * FROM
+		tbl_member WHERE id = #{id}
+	</select>
+
+	<select id="findId" resultType="String">
+		SELECT id FROM tbl_member
+		WHERE name = #{name} AND tel = #{tel}
+	</select>
+
+	<update id="findPw">
+		UPDATE tbl_member SET pw=#{param3}
+		WHERE id = #{param1} AND email = #{param2}
+	</update>
+
+	<update id="updatePw">
+	    UPDATE tbl_member 
+	    SET pw = #{npw} WHERE id = #{id}
+	</update>
+	
+	<update id="updatePoint">
+		UPDATE tbl_member
+        SET point = #{param2}
+        WHERE id = #{param1}
+	</update>
+	
+	<!-- 등급 -->
+	<update id="upgradeLevel">
+		UPDATE tbl_member
+		SET level = #{level}
+		WHERE id = #{id}
+	</update>
+	
+	<select id="getTotalPaid" resultType="int">
+		SELECT sum(total_amount) FROM tbl_order
+		WHERE id = #{id}
+	</select>
+	
+	<!-- 회원 등급(ajax)  -->
+	<select id="memberLevelAjax" resultType="String">
+		SELECT level FROM tbl_member
+		WHERE id = #{id}
+	</select>
+
+</mapper>

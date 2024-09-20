@@ -1,0 +1,91 @@
+@charset "utf-8";
+
+.figure {
+	width: 190px; 
+	height: 50px; 
+	background: #eee; 
+	text-align: center; 
+	line-height: 50px;
+}
+
+.graph {
+    width: 400px; 
+    height: 200px; 
+    background-color: #eee;
+    text-align: center;
+    border: 2px dashed #ccc; /* Visual feedback for drop target */
+    transition: border 0.3s ease; /* Smooth transition for drop indication */
+    position: relative;
+    margin: 10px;
+    position: relative;
+    z-index: 1; /* Default z-index */
+}
+.graph.over {
+    border: 2px dashed #000; /* Optional: visual feedback */
+    z-index: 10; /* Increase z-index to ensure drop target is on top */
+}
+
+.graph.active{
+	background-color: #bbb;
+}
+
+.close-btn {
+	display: none;
+}
+
+.close-btn.active{
+	display: block;
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	background: #f44336;
+	border: none;
+	color: white;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	display: flex;           /* Flexbox for centering the × */
+	align-items: center;     /* Center vertically */
+	justify-content: center; /* Center horizontally */
+	font-size: 20px;         /* Font size of × */
+	cursor: pointer;
+}
+
+.close-btn:hover {
+    background: #d32f2f;
+}
+
+.sidebar {
+    width: 20%;
+    position: fixed;
+    top: 45px;
+    right: -20%;  /* Hide the sidebar initially */
+    height: 100%;
+    background-color: #eee;
+    transition: right 0.3s ease;  /* Smooth sliding effect */
+}
+
+/* When the sidebar is visible */
+.sidebar.active {
+    right: 0;  /* Bring the sidebar into view */
+}
+
+.item-list {
+    padding: 20px;
+    color: #000040;;
+}
+
+.item {
+    padding: 10px;
+    background-color: #ddd;
+    margin-bottom: 5px;
+    cursor: pointer;
+    color: white;
+    background: skyblue;
+}
+
+.sortable-placeholder {
+    border: 1px dashed #ddd;
+    background: #f0f0f0;
+    height: 100px; /* Adjust as needed */
+}

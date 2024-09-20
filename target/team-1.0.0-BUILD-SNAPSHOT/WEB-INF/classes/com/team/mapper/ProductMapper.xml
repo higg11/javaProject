@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mapper.ProductMapper">
+	<!-- 관리자 -->
+	<!-- 상품 등록 -->
+	<insert id="prodInsert" parameterType="Map">
+		INSERT INTO
+		tbl_product(pname,pcategory_fk,pcompany,pimage,pqty,price,pspec,pcontent,point)
+		VALUES(#{pname},#{pcategory_fk},#{pcompany},#{pimage},#{pqty},#{price},#{pspec},#{pcontent},#{point})
+	</insert>
+
+	<!-- 상품 리스트 -->
+	<select id="productList" resultType="productDTO">
+		SELECT * from tbl_product
+		ORDER BY pnum DESC	
+		LIMIT #{startIndex}, #{cntPerPage}
+	</select>
+	
+	<!-- 재고 부족 상품 -->
+	<select id="stockList" resultType="productDTO">
+		SELECT * from tbl_product
+		WHERE pqty <![CDATA[<]]> 50	
+	</select>
+	
+	<!-- 전체 게시글 수 -->
+	<select id="totalCnt" resultType="Integer">
+	 	SELECT count(*) 
+		FROM tbl_product 
+		ORDER BY pnum DESC	  	
+	 </select>	
+
+	<!-- 상품 삭제 -->
+	<delete id="deleteProduct">
+		DELETE FROM tbl_product WHERE pnum = #{pnum}
+	</delete>
+
+	<!-- 상품정보 가져오기 -->
+	<select id="getProduct" resultType="productDTO">
+		SELECT * from tbl_product
+		WHERE pnum = #{pnum}
+	</select>
+
+	<!-- 상품 수정 -->
+	<update id="updateProduct">
+		UPDATE tbl_product SET pname = #{pname},
+		pcategory_fk = #{pcategory_fk}, pcompany = #{pcompany},
+		pimage = #{pimage}, pqty = #{pqty}, price = #{price}, pspec = #{pspec},
+		pcontent = #{pcontent}, point = #{point}, pinput_date = now() WHERE
+		pnum = #{pnum}
+	</update>
+	
+	<!-- 재고 수정 -->
+	<update id="updateStock" parameterType="map">
+		UPDATE tbl_product SET pqty = #{pqty}
+		WHERE pnum = #{pnum}
+	</update>
+	
+	
+	
+	<!-- 유저 -->
+	<!-- 전체 상품 리스트 -->
+	<select id="uprodList" resultType="ProductDTO">
+		select * from tbl_product
+	</select>
+	
+	<!-- 카테고리 - 상품별 리스트 -->
+	<select id="getProdByCategory" resultType="ProductDTO">
+		SELECT * FROM
+		tbl_product WHERE pcategory_fk = #{cat_code}
+	</select>
+
+	<!-- 스펙 - 상품별 리스트 -->
+	<select id="getProdBySpec" resultType="ProductDTO">
+		SELECT * FROM tbl_product
+		WHERE pspec = #{pSpec}
+	</select>
+
+	<!-- 상품 검색 -->
+	<sql id="criteria">
+		<if test="searchType == 'S'.toString()">
+			WHERE pname LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		<!-- 내용 검색 -->
+		<if test="searchType == 'C'.toString()">
+			WHERE pcategory_fk LIKE CONCAT('%',#{keyword},'%')
+		</if>
+		<!-- 제조사 검색 -->
+		<if test="searchType == 'W'.toString()">
+			WHERE pcompany LIKE CONCAT('%',#{keyword},'%')
+		</if>
+
+		<!-- <if test="searchType == 'SC'.toString()">
+			WHERE pname LIKE CONCAT('%',#{keyword},'%')
+			OR pcategory_fk
+			LIKE CONCAT('%',#{keyword},'%')
+		</if>
+
+		<if test="searchType == 'SW'.toString()">
+			WHERE pname LIKE CONCAT('%',#{keyword},'%')
+			OR pcompany
+			LIKE CONCAT('%',#{keyword},'%')
+		</if>
+
+		<if test="searchType == 'SCW'.toString()">
+			WHERE pname LIKE CONCAT('%',#{keyword},'%')
+			OR pcategory_fk
+			LIKE CONCAT('%',#{keyword},'%')
+			OR pcompany LIKE
+			CONCAT('%',#{keyword},'%')
+		</if> -->
+	</sql>
+
+	<select id="prodSearch" resultType="ProductDTO">
+		SELECT * FROM tbl_product
+		<include refid="criteria"></include>		
+	</select>
+
+
+
+</mapper>

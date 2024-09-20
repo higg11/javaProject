@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mapper.ReservationMapper">
+
+	<!-- 관리자 -->  
+	<!-- 예약확정 -->
+	<update id="reservationConfirmed">
+		UPDATE tbl_reservation
+	    SET reservationStatus = 'DONE'  <!-- #{status} -->
+	    WHERE rno = #{rno}
+	</update>
+	
+	<!-- 예약취소 -->
+	<delete id="reservationCancel">
+		DELETE from tbl_reservation WHERE rno = #{rno}
+	</delete>
+
+	<!-- 예약리스트 불러오기 (달력 표시) -->
+    <select id="calendarList" resultType="ReservationDTO">
+    	SELECT * FROM tbl_reservation
+    	ORDER BY time
+    </select>
+    
+    <!-- 당일 예약리스트 불러오기 -->
+    <select id="reservationList" resultType="ReservationDTO">
+    	SELECT * FROM tbl_reservation
+    	WHERE DATE(date) = CURDATE() 
+    	ORDER BY time
+    </select>
+
+
+
+
+	<!-- 유저 -->
+	
+	<!-- 예약하기 -->
+	<insert id="reservation" parameterType="reservationDTO">
+		INSERT INTO tbl_reservation (rno, rid_fk, date, time, contents, reservationStatus, amount)
+		VALUES (#{rno}, #{rid_fk}, #{date}, #{time}, #{contents}, #{reservationStatus}, #{amount})
+	</insert>
+	
+	<!-- 예약정보 확인하기 -->
+	<select id="reservationInfo" resultType="reservationDTO"> 
+		SELECT * FROM tbl_reservation WHERE rid_fk = #{rid_fk}
+		ORDER BY date DESC
+	</select>
+	
+	<!-- 예약시간 중복체크 -->
+	 <select id="getReservedTimes" parameterType="String" resultType="String">
+        SELECT time
+        FROM tbl_reservation
+        WHERE date = #{date}
+    </select>
+    
+    <!-- 예약확정시 유저정보 불러오기 -->
+    <select id="getInfo" resultType="reservationDTO">
+    	SELECT * from tbl_reservation
+    	WHERE rno = #{rno}
+    </select>
+	
+</mapper>

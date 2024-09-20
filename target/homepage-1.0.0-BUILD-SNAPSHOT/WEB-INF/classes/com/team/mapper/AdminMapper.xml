@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.team.mapper.AdminMapper">
+	<!-- 관리자 로그인 -->
+	<select id="adminLogin" resultType="adminDTO">
+		SELECT * FROM ad_member WHERE ad_id = #{ad_id}
+	</select>	
+	
+	
+	
+	<!-- 관리자홈 - 오늘매출 -->
+	<select id="todayPurchase" resultType="String">
+		SELECT sum(total_amount) AS TODAY_PURCHASE_AMOUNT				
+		FROM tbl_order
+		WHERE DATE_FORMAT(order_date, '%y-%m-%d') = DATE_FORMAT(now(), '%y-%m-%d')		
+	</select>	
+		
+	<!-- 관리자홈 - 총매출 -->
+	<select id="totalPurchase" resultType="String">
+		SELECT SUM(total_amount) AS TOT_PURCHASE_AMOUNT				
+		FROM tbl_order;
+	</select>	
+		
+	<!-- 관리자홈 - 일매출(최근7일)차트 -->
+	<select id="dailyPurchase" resultType="orderDTO">
+	    WITH RECURSIVE A AS (
+			SELECT 0 AS LEVEL
+			UNION ALL
+			SELECT A.LEVEL + 1
+			FROM A
+			WHERE A.LEVEL <![CDATA[<]]> DATEDIFF("2024-12-31", "2024-01-01")
+			),
+			DAILY_PURCHASE AS (
+				SELECT DATE_FORMAT(order_date, "%Y-%m-%d") AS order_date, SUM(total_amount) AS PURCHASE_AMOUNT
+				FROM tbl_order
+				GROUP BY DATE_FORMAT(order_date, "%Y-%m-%d")
+			)
+		SELECT 
+			DATE_FORMAT(DATE_SEQ.date, "%Y-%m-%d") AS order_date,
+			IFNULL(DP.PURCHASE_AMOUNT, 0) AS purchase_amount
+		FROM (SELECT ADDDATE('2024-01-01', INTERVAL LEVEL DAY) AS date FROM A) DATE_SEQ
+		LEFT JOIN DAILY_PURCHASE DP
+		ON DATE_SEQ.date = DP.order_date
+		WHERE DATE_SEQ.date BETWEEN '2024-01-01' AND '2024-12-31'
+			AND DATE_SEQ.date BETWEEN DATE_ADD(NOW(), INTERVAL -1 WEEK) AND NOW()
+		ORDER BY DATE_SEQ.date;	
+	</select>
+
+	<!-- 관리자홈 - 월매출 차트 -->
+	<select id="monthlyPurchase" resultType="orderDTO">	 
+		WITH MONTHLY_PURCHASE AS(
+			SELECT order_date,
+			SUBSTR(order_date,1,4) AS YY,
+			SUBSTR(order_date,6,2) AS MM,
+			SUBSTR(order_date,9,2) AS DD,
+			SUM(total_amount) AS PURCHASE_AMOUNT
+			FROM tbl_order
+			GROUP BY YY, MM
+		   )      
+		SELECT CONCAT(YY, '-', MM) AS ORDER_MONTH,
+			   PURCHASE_AMOUNT    
+		FROM MONTHLY_PURCHASE 
+		ORDER BY order_month;         	
+	</select>
+	
+	<!-- 관리자 홈 - 상품판매량 차트 -->
+	<select id="prod_purchase" resultType="orderDetailDTO">	
+		SELECT SUM(A.quantity) AS TOT_PQTY, C.cat_name
+		FROM tbl_orderDetail A           
+		LEFT JOIN tbl_product B ON B.pnum = A.pnum
+		LEFT JOIN tbl_category C ON B.pcategory_fk  = C.cat_code
+		GROUP BY C.cat_name;	 
+	</select>	
+	
+	<!-- 관리자 홈 - 기부금 차트 -->
+	<select id="monthlyDonation" resultType="pointDTO">
+		WITH MONTHLY_DONATION AS(
+				SELECT date,
+				SUBSTR(date,1,4) AS YY,
+				SUBSTR(date,6,2) AS MM,
+				SUBSTR(date,9,2) AS DD,
+				SUM(point) AS monthlyAmount
+				FROM tbl_point
+				GROUP BY YY, MM
+			   )      
+		SELECT CONCAT(YY, '-', MM) AS donation_month,
+			   monthlyAmount    
+		FROM MONTHLY_DONATION 
+		ORDER BY donation_month;   
+	</select>
+	
+	<!-- 관리자홈 : 차트 저장  -->
+	<insert id="saveChartData">
+		 INSERT INTO tbl_chart (id, canvasId, dataUrl)
+   		 VALUES (#{id}, #{canvasId}, #{dataUrl})
+	</insert>
+	
+	<!-- 관리자홈 : 차트 불러오기  -->
+	<select id="findById" resultType="chartDTO">
+		SELECT * FROM tbl_chart 
+		WHERE id = #{id}
+	</select>
+	
+	<!-- 관리자홈 : 차트 삭제하기 -->
+	<delete id="deleteChart">
+    	DELETE FROM tbl_chart WHERE canvasId = #{canvasId}
+	</delete>
+	
+<!-- 	
+	
+	
+	<resultMap type="orderDTO" id="HashMap">
+	<result property="order_num" column="order_num" />
+	<result property="order_date" column="order_date" />
+	
+	<result property="qty_ordered" column="qty_ordered" />
+	<result property="price_each" column="price_each" />
+</resultMap>	
+	
+	<select id="getIncome" resultType="HashMap">
+		SELECT A.order_num, A.order_date, SUM(B.qty_ordered*B.price_each) sum 
+		FROM tbl_order A 
+		LEFT JOIN orderDetail B
+		ON A.order_num = B.order_num
+		GROUP BY 1
+		ORDER BY 1;		
+	</select>
+	
+	매출관리페이지 - 매출관리 정보 가져오기 
+	 <sql id="criteria">
+	    <where>
+	        주문번호
+	        <if test="searchType == 'S'.toString()">
+	            A.order_num = #{keyword}
+	        </if>
+	        상품명
+	        <if test="searchType == 'C'.toString()">
+	            B.pname LIKE CONCAT('%', #{keyword}, '%')
+	        </if>
+	        주문일
+	        <if test="searchType == 'W'.toString()">
+	            A.order_date LIKE CONCAT('%', #{keyword}, '%')
+	            A.order_date = #{keyword}
+	        </if>
+	    </where>
+	</sql>	
+	<select id="salesInfo" resultType="orderDTO">
+		SELECT A.order_num, A.order_date, B.qty_ordered, B.price_each, B.pname				
+		FROM tbl_order A
+		LEFT JOIN orderDetail B ON A.order_num = B.order_num
+		LEFT JOIN product_info C ON B.pcode = C.pcategory_fk
+		<include refid="criteria"></include>
+		ORDER BY A.order_date
+		LIMIT #{startIndex}, #{cntPerPage}
+	</select>
+	
+	날짜 범위 지정 검색 
+	<select id="salesInfoPeriod" resultType="orderDTO">
+	    SELECT A.order_num, A.order_date, B.qty_ordered, B.price_each, B.pname				
+	    FROM tbl_order A
+	    LEFT JOIN orderDetail B ON A.order_num = B.order_num
+	    LEFT JOIN product_info C ON B.pcode = C.pcategory_fk
+	    WHERE A.order_date BETWEEN #{startDate} AND DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+	    ORDER BY A.order_date
+	    LIMIT #{startIndex}, #{cntPerPage}
+	</select>
+	
+	 검색어 있을 때 전체 게시글 수
+	  <select id="totalCnt" resultType="Integer">
+	  	SELECT count(*) 
+	  	FROM tbl_order A
+		LEFT JOIN orderDetail B ON A.order_num = B.order_num
+		LEFT JOIN product_info C ON B.pcode = C.pcategory_fk
+		<include refid="criteria"></include>
+		ORDER BY A.order_date	  	
+	  	<include refid="criteria"></include>
+	  </select>
+	
+	매출관리페이지 - 오늘매출 상세보기 
+	<select id="todayAjaxList" resultType="orderDTO">
+		SELECT A.order_num, A.order_date, B.qty_ordered, B.price_each, B.pname,
+		SUM(B.qty_ordered*B.price_each) AS TODAY_PURCHASE_AMOUNT				
+		FROM tbl_order A
+		LEFT JOIN orderDetail B ON A.order_num = B.order_num
+		LEFT JOIN product_info C ON B.pcode = C.pcategory_fk
+		WHERE DATE_FORMAT(A.order_date, '%y-%m-%d') = DATE_FORMAT(now(), '%y-%m-%d')
+	</select>
+	
+	매출관리페이지 - 일매출 차트(한달단위)
+	<select id="dailyPurchaseChart" resultType="orderDTO">
+		WITH RECURSIVE A AS (
+	    SELECT 0 AS LEVEL
+	    UNION ALL
+	    SELECT A.LEVEL + 1
+	    FROM A
+	    WHERE A.LEVEL <![CDATA[<]]> DAY(LAST_DAY(NOW())) - 1
+		),
+		DAILY_PURCHASE AS (
+		    SELECT 
+		        A.order_date,
+		        SUM(B.qty_ordered * B.price_each) AS PURCHASE_AMOUNT
+		    FROM 
+		        tbl_order A
+		    LEFT JOIN 
+		        orderDetail B
+		    ON 
+		        A.order_num = B.order_num
+		    GROUP BY 
+		        A.order_date
+		)
+		SELECT 
+		    DATE_FORMAT(DATE_SEQ.date, "%Y-%m-%d") AS order_date,
+		    IFNULL(DP.PURCHASE_AMOUNT, 0) AS purchase_amount
+		FROM 
+		    (SELECT ADDDATE(DATE_FORMAT(NOW(), '%Y-%m-01'), INTERVAL LEVEL DAY) AS date FROM A) DATE_SEQ
+		LEFT JOIN 
+		    DAILY_PURCHASE DP
+		ON 
+		    DATE_SEQ.date = DP.order_date
+		WHERE 
+		    DATE_FORMAT(DATE_SEQ.date, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')
+		ORDER BY 
+		    DATE_SEQ.date;
+	</select>
+	
+	매출관리페이지 월선택 30일 매출데이터 
+	<select id="getSalesDataForPeriod" resultType="orderDTO">
+	    SELECT DATE(order_date) AS date, SUM(price_each * qty_ordered) AS sales
+	    SELECT A.order_date, SUM(B.qty_ordered * B.price_each) AS PURCHASE_AMOUNT
+	    FROM tbl_order A
+	    LEFT JOIN orderDetail B ON A.order_num = B.order_num
+	    LEFT JOIN product_info C ON B.pcode = C.pcategory_fk
+	    WHERE A.order_date BETWEEN #{startDate} AND #{endDate}
+	    GROUP BY DATE(order_date)
+	    ORDER BY DATE(order_date)
+	</select>
+	
+	매출관리페이지 - 오늘매출 상세정보
+	<select id="todayPurchaseInfo" resultType="orderDTO">
+		SELECT A.order_num, A.order_date, B.qty_ordered, B.price_each, C.pname,
+		SUM(B.qty_ordered*B.price_each) AS TODAY_PURCHASE_AMOUNT				
+		FROM tbl_order A
+		LEFT JOIN orderDetail B ON A.order_num = B.order_num
+		LEFT JOIN product_info C ON B.pcode = C.pcategory_fk
+		WHERE DATE_FORMAT(A.order_date, '%y-%m-%d') = DATE_FORMAT(now(), '%y-%m-%d')
+	</select>
+	
+	
+	
+	 -->
+	
+	
+</mapper>
+
+
+
+

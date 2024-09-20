@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.team.mapper.CartMapper">
+	<!-- 장바구니  -->	
+	<!-- 카트 전체 리스트 -->
+<!-- 	<select id="cartList" resultType="CartDTO">
+		SELECT c.cart_num, c.cid_fk, c.pnum_fk, c.pqty, p.pimage, p.pname, p.price, p.point, p.pspec 
+		FROM tbl_cart c, tbl_product p 
+		WHERE c.pnum_fk = p.pnum AND c.cid_fk = #{cid_fk} AND type = "Cart"
+	</select> -->
+	<select id="cartList" resultType="CartDTO">
+		SELECT * FROM tbl_cart c
+		LEFT JOIN tbl_product p ON p.pnum = c.pnum_fk
+		WHERE c.cid_fk = #{cid_fk} AND type = "Cart"
+	</select>
+	
+	<!-- 카트 등록 -->
+	<insert id="addCart" parameterType="CartDTO">
+		INSERT INTO tbl_cart(cid_fk, pnum_fk, pqty, type) 
+		VALUES(#{cid_fk}, #{pnum_fk}, #{pqty}, #{type})
+	</insert>
+	
+	<!-- 카트 리스트 체크(상품이 있는지 없는지) -->
+ 	<select id="checkCart" resultType="CartDTO"> 
+		SELECT * FROM tbl_cart 
+		WHERE cid_fk = #{cid_fk} AND pnum_fk = #{pnum_fk} AND type = "Cart"
+	</select>
+	
+	<!-- 카트 수정하기 OK -->
+ 	<update id="modifyCart" parameterType="CartDTO">
+		UPDATE tbl_cart SET pqty = #{pqty} WHERE cart_num = #{cart_num}
+	</update>
+	
+	<!-- 카트 삭제 -->
+	<delete id="deleteCart" parameterType="Integer">
+		DELETE FROM tbl_cart WHERE cart_num = #{cart_num}
+	</delete>
+	
+	<!-- 장바구니 총수량(실시간) -->
+	<select id="shoppingCartCount" resultType="String">
+		SELECT sum(pqty) AS tot_pqty
+		FROM tbl_cart
+		WHERE cid_fk = #{cid_fk} AND type = "Cart"
+	</select>
+	
+	
+	
+	
+	<!-- 찜하기 리스트 체크(상품이 있는지 없는지) -->
+ 	<select id="checkFavorite" resultType="CartDTO"> 
+		SELECT * FROM tbl_cart 
+		WHERE cid_fk = #{cid_fk} AND pnum_fk = #{pnum_fk} AND type = 'Favorite'
+	</select>
+	
+	<!-- 찜하기 추가  -->
+	<insert id="addFavorite">
+		INSERT INTO tbl_cart (cid_fk, pnum_fk, type)
+		VALUES (#{cid_fk}, #{pnum_fk}, #{type})
+	</insert>
+	
+	<!-- 찜하기 전체 리스트 -->
+	<select id="favoriteList" resultType="CartDTO">
+		SELECT * FROM tbl_cart c
+		LEFT JOIN tbl_product p ON p.pnum = c.pnum_fk
+		WHERE c.cid_fk = #{id} AND type = "Favorite"
+	</select>
+	<!-- 찜하기에서 장바구니로 이동(타입수정) -->
+ 	<update id="favoriteToCart">
+		UPDATE tbl_cart 
+		SET type = 'Cart' 
+		WHERE cart_num = #{cart_num} AND type = 'Favorite'
+	</update>
+	
+	<!--  -->
+	<select id="cartDtoByPnum" resultType="CartDTO">
+		SELECT * FROM tbl_cart
+		WHERE cart_num = #{cart_num} 
+	</select>
+	
+	
+	
+	
+	
+	<!-- 구매페이지  -->
+	<!-- 구매페이지에서 카트 삭제 -->
+	<delete id="deleteCheckout">
+		DELETE FROM tbl_cart WHERE pnum_fk = #{param1} AND cid_fk = #{param2}
+	</delete>
+	
+	<select id="getCartList" resultType="CartDTO">
+        SELECT * FROM tbl_cart WHERE user_id = #{userId}
+    </select>
+
+</mapper>
