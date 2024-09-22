@@ -36,6 +36,7 @@
 ⭐ ERD Diagram
 ![ERD](https://github.com/user-attachments/assets/f45c49b6-d912-4d4e-b600-f4d9a03c1aa0)
 ⭐ 회원가입, 로그인, ID/PW찾기
+https://github.com/user-attachments/assets/a8862ca1-8539-41bc-a846-af182ad0bcba
 ![회원가입_로그인](https://github.com/user-attachments/assets/efd41c43-15dd-41db-b11e-6a275fa2671d)
 ⭐ 상품등록(관리자), 상품리스트(관리자), 재고관리(관리자)
 ![상품등록](https://github.com/user-attachments/assets/a72e15ea-5790-41db-a331-9632dff7d08d)
